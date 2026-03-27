@@ -19,19 +19,20 @@ apiClient.interceptors.response.use(
 );
 
 /**
- * Fetches the default list of facilities from the database.
- * Passes default pagination parameters.
+ * Fetches the list of facilities with optional filters and pagination.
  */
-export const fetchCatalogue = async () => {
-  const response = await apiClient.get('', {
-    params: { page: 0, size: 20 },
-  });
+export const fetchCatalogue = async (page = 0, size = 20, type = '', minCapacity = '', name = '') => {
+  const params = { page, size };
+  if (type) params.type = type;
+  if (minCapacity) params.minCapacity = minCapacity;
+  if (name) params.name = name;
+
+  const response = await apiClient.get('', { params });
   return response.data;
 };
 
 /**
  * Triggers the AI recommendation engine on the backend.
- * Expects { intent: "string" } DTO matching the Java backend.
  */
 export const fetchRecommendations = async (intentText) => {
   const response = await apiClient.post('/recommendations', {
@@ -39,3 +40,28 @@ export const fetchRecommendations = async (intentText) => {
   });
   return response.data;
 };
+
+/**
+ * Creates a new resource.
+ */
+export const createResource = async (resourceData) => {
+  const response = await apiClient.post('', resourceData);
+  return response.data;
+};
+
+/**
+ * Updates an existing resource.
+ */
+export const updateResource = async (id, resourceData) => {
+  const response = await apiClient.put(`/${id}`, resourceData);
+  return response.data;
+};
+
+/**
+ * Deletes a resource by its ID.
+ */
+export const deleteResource = async (id) => {
+  const response = await apiClient.delete(`/${id}`);
+  return response.data;
+};
+

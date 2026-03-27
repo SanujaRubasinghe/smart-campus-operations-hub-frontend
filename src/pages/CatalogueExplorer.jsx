@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SmartSearchBar from '../components/catalog/SmartSearchBar';
 import ResourceCard from '../components/catalog/ResourceCard';
+import FilterBar from '../components/catalog/FilterBar';
+import Pagination from '../components/catalog/Pagination';
 import { fetchCatalogue, fetchRecommendations } from '../services/api';
 import '../assets/css/catalog.css';
 
@@ -10,70 +12,91 @@ const CatalogueExplorer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch the default catalogue when the component mounts
+  // Pagination and Filters State
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState({ type: '', minCapacity: '', name: '' });
+  const pageSize = 20;
+
   useEffect(() => {
-    const loadInitialData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        // Ensure you return list in data or handle Spring Data JPA's Response entity properly
-        // If your Spring Boot returns an array, .data will be that array.
-        // If it returns a paginated object, it might be .data.content
-        const data = await fetchCatalogue();
-        
-        // Handle both raw arrays and Page<T> formats
-        const resourceList = Array.isArray(data) ? data : data.content || [];
-        setResources(resourceList);
-      } catch (err) {
-        setError('Unable to connect to the server. Please ensure the backend is running.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // Standard filtered/paginated fetch
+    if (!isAiMode) {
+      const loadData = async () => {
+        try {
+          setIsLoading(true);
+          setError(null);
+          const data = await fetchCatalogue(currentPage, pageSize, filters.type, filters.minCapacity, filters.name);
+          if (Array.isArray(data)) {
+             setResources(data);
+             setTotalPages(1);
+          } else {
+             setResources(data.content || []);
+             setTotalPages(data.totalPages || 1);
+          }
+        } catch (err) {
+          setError('Unable to fetch the catalogue. Is your backend running?');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      loadData();
+    }
+  }, [currentPage, filters, isAiMode]);
 
-    loadInitialData();
-  }, []);
-
-  // Async function to handle the Smart Search intent
-  const handleSearch = async (query) => {
-    if (!query.trim()) {
-      // If empty query, reset to regular catalogue
+  const handleSearch = async (query, mode) => {
+    if (mode === 'NORMAL') {
       setIsAiMode(false);
-      setIsLoading(true);
-      try {
-        const data = await fetchCatalogue();
-        const resourceList = Array.isArray(data) ? data : data.content || [];
-        setResources(resourceList);
-      } catch (err) {
-        setError('Unable to fetch catalogue data.');
-      } finally {
-        setIsLoading(false);
-      }
+      setFilters(prev => ({ ...prev, name: query }));
+      setCurrentPage(0); // Reset page on new search
       return;
     }
 
-    try {
-      setIsLoading(true);
-      setError(null);
-      setIsAiMode(true);
-      const recommendedData = await fetchRecommendations(query);
-      // AI endpoint usually returns a smaller targeted array
-      setResources(Array.isArray(recommendedData) ? recommendedData : []);
-    } catch (err) {
-      setError('Failed to fetch recommendations from the AI engine.');
-    } finally {
-      setIsLoading(false);
+    if (mode === 'AI') {
+      if (!query.trim()) {
+        setIsAiMode(false);
+        setFilters(prev => ({ ...prev, name: '' }));
+        setCurrentPage(0);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+        setIsAiMode(true);
+        const data = await fetchRecommendations(query);
+        setResources(Array.isArray(data) ? data : []);
+        setTotalPages(1); // AI mode doesn't paginate
+      } catch (err) {
+        setError('Failed to fetch AI recommendations from backend.');
+      } finally {
+        setIsLoading(false);
+      }
     }
+  };
+
+  const handleFilterChange = (newFilters) => {
+    // newFilters won't have the 'name' property from FilterBar since it's not rendered there,
+    // so we need to spread the existing name back in.
+    setFilters(prev => ({ ...newFilters, name: prev.name }));
+    setCurrentPage(0); 
+    setIsAiMode(false); 
   };
 
   return (
     <div className="catalog-container">
       <SmartSearchBar onSearch={handleSearch} />
       
+      {!isAiMode && (
+        <FilterBar 
+          filters={filters} 
+          onFilterChange={(newFilters) => handleFilterChange(newFilters)} 
+        />
+      )}
+
       {isLoading && (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#86868b' }}>
-          <h3>Analyzing campus facilities...</h3>
-          <p>Please wait while we connect to the Smart Campus operations hub.</p>
+          <h3>Loading facilities...</h3>
+          <p>Connecting to the Smart Campus database.</p>
         </div>
       )}
 
@@ -84,17 +107,27 @@ const CatalogueExplorer = () => {
       )}
 
       {!isLoading && !error && resources.length === 0 && (
-        <div className="empty-state">
-          No facilities match your request. Try adjusting your search query.
+        <div className="empty-state" style={{ textAlign: 'center', padding: '3rem', color: '#86868b', fontSize: '1.1rem' }}>
+          No facilities match your request. Adjust your filters or search query.
         </div>
       )}
 
       {!isLoading && !error && resources.length > 0 && (
-        <div className="resource-grid">
-          {resources.map((resource) => (
-            <ResourceCard key={resource.id} resource={resource} />
-          ))}
-        </div>
+        <>
+          <div className="resource-grid">
+            {resources.map((resource) => (
+              <ResourceCard key={resource.id} resource={resource} />
+            ))}
+          </div>
+          
+          {!isAiMode && (
+            <Pagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          )}
+        </>
       )}
     </div>
   );

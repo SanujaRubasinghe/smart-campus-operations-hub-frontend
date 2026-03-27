@@ -1,7 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 import CatalogueExplorer from './pages/CatalogueExplorer';
-import './assets/css/catalog.css'; // Just in case, though it's imported in CatalogueExplorer too.
+import AdminDashboard from './pages/AdminDashboard';
+import './assets/css/catalog.css';
 
 function App() {
   return (
@@ -10,19 +11,25 @@ function App() {
         <nav className="app-navbar">
           <div className="brand-title">Smart Campus Operations Hub</div>
           <div className="nav-links">
-            <Link to="/" className="nav-link">Catalogue</Link>
-            <Link to="/admin" className="nav-link">Admin Dashboard</Link>
+            <NavLink 
+              to="/" 
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
+            >
+              Catalogue
+            </NavLink>
+            <NavLink 
+              to="/admin" 
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
+            >
+              Admin Dashboard
+            </NavLink>
           </div>
         </nav>
 
         <main>
           <Routes>
             <Route path="/" element={<CatalogueExplorer />} />
-            <Route path="/admin" element={
-              <div className="catalog-container">
-                <div className="empty-state">Admin Dashboard Placeholder</div>
-              </div>
-            } />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>
       </div>
