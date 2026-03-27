@@ -1,34 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import CatalogueExplorer from './pages/CatalogueExplorer'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="app-layout">
+        <nav style={{ padding: '1rem 2rem', borderBottom: '1px solid #eee', display: 'flex', gap: '2rem', alignItems: 'center' }}>
+          <h1 style={{ margin: 0, fontSize: '1.5rem', color: '#007bff' }}>Smart Campus</h1>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <Link to="/" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>Home</Link>
+            <Link to="/catalog" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>Facilities Catalog</Link>
+          </div>
+        </nav>
+        
+        <main>
+          <Routes>
+            <Route path="/" element={
+              <div style={{ textAlign: 'center', padding: '4rem' }}>
+                <h2>Welcome to Smart Campus Operations Hub</h2>
+                <p>Select "Facilities Catalog" to begin exploring campuses spaces.</p>
+                <Link to="/catalog">
+                  <button style={{ padding: '0.8rem 1.5rem', background: '#007bff', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', marginTop: '1rem' }}>
+                    Open Catalog
+                  </button>
+                </Link>
+              </div>
+            } />
+            <Route path="/catalog" element={<CatalogueExplorer />} />
+          </Routes>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </Router>
   )
 }
 

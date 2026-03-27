@@ -1,0 +1,107 @@
+/* src/assets/css/catalog.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.catalog-container {
+  font-family: 'Inter', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #333;
+}
+
+/* The Smart Search Glassmorphism & Glow */
+.smart-search-wrapper {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  transition: all 0.3s ease;
+}
+
+.smart-search-wrapper:focus-within {
+  box-shadow: 0 0 20px rgba(0, 123, 255, 0.4), 0 8px 32px rgba(31, 38, 135, 0.1);
+  border-color: rgba(0, 123, 255, 0.5);
+}
+
+.smart-search-input {
+  width: 70%;
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid #ddd;
+  font-size: 1.1rem;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+.smart-search-btn {
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(135deg, #007bff, #00d2ff);
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-left: -50px; /* Overlaps input slightly for a sleek look */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.smart-search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+/* Resource Grid & Cards */
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.resource-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+
+.status-badge {
+  align-self: flex-start;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.status-active { background: #e6f4ea; color: #1e8e3e; }
+.status-out { background: #fce8e6; color: #d93025; }
+
+.amenities-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.tag {
+  background: #f1f3f4;
+  color: #5f6368;
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
