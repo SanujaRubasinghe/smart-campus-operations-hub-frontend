@@ -38,7 +38,7 @@ const SmartSearchBar = ({ onSearch }) => {
       </div>
 
       <div className="smart-search-wrapper" style={{ width: '100%', maxWidth: '800px', margin: '0 auto 3rem auto' }}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '1rem' }}>
           <input
             type="text"
             className="smart-search-input"
@@ -46,6 +46,9 @@ const SmartSearchBar = ({ onSearch }) => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
+          <button type="submit" className="btn-primary" style={{ padding: '0.8rem 1.5rem', borderRadius: '12px', flexShrink: 0 }}>
+            Search
+          </button>
         </form>
       </div>
     </div>

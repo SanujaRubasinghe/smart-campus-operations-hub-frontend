@@ -65,3 +65,20 @@ export const deleteResource = async (id) => {
   return response.data;
 };
 
+/**
+ * Uploads an image file for a given resource ID.
+ */
+export const uploadResourceImage = async (id, file) => {
+  if (!id) {
+    throw new Error(`CRITICAL: uploadResourceImage was called with a null or undefined ID. The backend create endpoint likely did not return the expected JSON shape.`);
+  }
+
+  const formData = new FormData();
+  // Using 'file' as the mapping key for Spring Boot @RequestParam("file") MultipartFile file
+  formData.append('file', file);
+  const response = await apiClient.post(`/${id}/image`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return response.data;
+};
+

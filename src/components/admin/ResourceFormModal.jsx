@@ -11,8 +11,10 @@ const ResourceFormModal = ({ isOpen, onClose, onSave, initialData }) => {
     amenities: []
   });
   const [amenityInput, setAmenityInput] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null); // File upload state
 
   useEffect(() => {
+    setSelectedFile(null); // Reset file input when opened or changed
     if (initialData) {
       setFormData(initialData);
     } else {
@@ -46,7 +48,7 @@ const ResourceFormModal = ({ isOpen, onClose, onSave, initialData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+    onSave(formData, selectedFile);
   };
 
   return (
@@ -57,6 +59,17 @@ const ResourceFormModal = ({ isOpen, onClose, onSave, initialData }) => {
         </h2>
         
         <form onSubmit={handleSubmit}>
+          
+          <div className="form-group">
+            <label>Cover Image (Required format: PNG, JPEG, WEBP)</label>
+            <input 
+              type="file" 
+              accept="image/png, image/jpeg, image/webp" 
+              onChange={(e) => setSelectedFile(e.target.files[0])} 
+              style={{ backgroundColor: '#fcfcfc' }}
+            />
+          </div>
+
           <div className="form-group">
             <label>Name</label>
             <input type="text" name="name" value={formData.name} onChange={handleChange} required />

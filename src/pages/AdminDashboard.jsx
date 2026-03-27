@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchCatalogue, createResource, updateResource, deleteResource } from '../services/api';
+import { fetchCatalogue, createResource, updateResource, deleteResource, uploadResourceImage } from '../services/api';
 import ResourceFormModal from '../components/admin/ResourceFormModal';
 import '../assets/css/catalog.css';
 
@@ -12,15 +12,14 @@ const AdminDashboard = () => {
 
   const loadData = async () => {
     try {
-      setIsLoading(true);
-      // Fetch a larger page size for the admin table
-      const data = await fetchCatalogue(0, 100);
-      setResources(Array.isArray(data) ? data : data.content || []);
-      setError(null);
+        setIsLoading(true);
+        const data = await fetchCatalogue(0, 100);
+        setResources(Array.isArray(data) ? data : data.content || []);
+        setError(null);
     } catch (err) {
-      setError('Unable to load facilities for administration.');
+        setError('Unable to load facilities for administration.');
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
   };
 
@@ -38,17 +37,35 @@ const AdminDashboard = () => {
     setIsModalOpen(false);
   };
 
-  const handleSave = async (formData) => {
+  // The Two-Step Submission Process Implementation
+  const handleSave = async (formData, selectedFile) => {
     try {
+      let savedResource;
+      
+      // Step 1: Normal JSON Data payload
       if (editingResource) {
-        await updateResource(editingResource.id, formData);
+        savedResource = await updateResource(editingResource.id, formData);
       } else {
-        await createResource(formData);
+        savedResource = await createResource(formData);
       }
+
+      // We extract the ID from either the response object or the state cache
+      const resourceId = savedResource?.id || editingResource?.id;
+
+      // Step 2: Push Multi-part FormData if file exists
+      if (selectedFile && resourceId) {
+         try {
+            await uploadResourceImage(resourceId, selectedFile);
+         } catch(imageErr) {
+            console.error("Image upload failed:", imageErr);
+            alert("Facility JSON saved successfully, but the image upload was rejected by the backend. Have you created the POST /{id}/image endpoint?");
+         }
+      }
+
       handleCloseModal();
-      loadData(); // Refresh table
+      loadData(); // Re-sync table with database
     } catch (err) {
-      alert('Failed to save resource. Ensure your backend endpoints are implemented properly.');
+      alert('Failed to save resource text data. Ensure your backend endpoints accept the JSON DTO.');
       console.error(err);
     }
   };
