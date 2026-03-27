@@ -1,32 +1,40 @@
 import React from 'react';
+import '../../assets/css/catalog.css';
 
 const ResourceCard = ({ resource }) => {
-  const isActive = resource.status === 'ACTIVE';
+  // Map internal status to badge class
+  const badgeClass = resource.status === 'ACTIVE' ? 'badge-active' : 'badge-out_of_service';
 
   return (
     <div className="resource-card">
-      <span className={`status-badge ${isActive ? 'status-active' : 'status-out'}`}>
-        {resource.status.replace('_', ' ')}
-      </span>
-      
-      <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.4rem' }}>{resource.name}</h3>
-      <p style={{ margin: '0 0 1rem 0', color: '#666', fontWeight: '500' }}>
-        {resource.type.replace('_', ' ')} • {resource.capacity} Seats
-      </p>
-      
-      <div className="amenities-tags">
-        {resource.amenities?.map((item, idx) => (
-          <span key={idx} className="tag">{item}</span>
-        ))}
+      <div className="resource-header">
+        <div>
+          <h3 className="resource-title">{resource.name}</h3>
+          <p className="resource-type">{resource.type}</p>
+        </div>
+        <span className={`badge ${badgeClass}`}>
+          {resource.status}
+        </span>
       </div>
-      
-      <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid #eaeaea', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: '0.9rem', color: '#888' }}>📍 {resource.location}</span>
-        {/* Member 2 will likely wire this button up to their booking flow later! */}
-        <button style={{ padding: '0.5rem 1rem', background: '#fff', border: '1px solid #007bff', color: '#007bff', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}>
-          Book Space
-        </button>
+
+      <div className="resource-details">
+        <div className="detail-item">
+          <strong>Capacity:</strong> {resource.capacity} people
+        </div>
+        <div className="detail-item">
+          <strong>Location:</strong> {resource.location}
+        </div>
       </div>
+
+      {resource.amenities && resource.amenities.length > 0 && (
+        <div className="amenities-list">
+          {resource.amenities.map((amenity, index) => (
+            <span key={index} className="amenity-tag">
+              {amenity}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

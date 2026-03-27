@@ -4,51 +4,53 @@ import ResourceCard from '../components/catalog/ResourceCard';
 import '../assets/css/catalog.css';
 
 const CatalogueExplorer = () => {
-  // Placeholder state until we connect the Axios API in Phase 6
   const [resources, setResources] = useState([
+    /* Placeholder data to demonstrate UI before API integration */
     {
-      id: 1,
-      status: 'ACTIVE',
-      name: 'High-Performance Lab A',
-      type: 'Computer Lab',
-      capacity: 40,
-      amenities: ['High-end GPUs', 'Dual Monitors', 'Whiteboard'],
-      location: 'Building C, Floor 2'
+      id: "R-001",
+      name: "Main Auditorium",
+      type: "Auditorium",
+      capacity: 500,
+      location: "Block A - Level 1",
+      status: "ACTIVE",
+      amenities: ["Projector", "Sound System", "Stage"]
     },
     {
-      id: 2,
-      status: 'UNDER_MAINTENANCE',
-      name: 'Study Room 101',
-      type: 'Study Space',
-      capacity: 6,
-      amenities: ['Smart TV', 'Power Outlets'],
-      location: 'Library, Ground Floor'
+      id: "R-002",
+      name: "Discussion Room B",
+      type: "Meeting Room",
+      capacity: 8,
+      location: "Block C - Level 3",
+      status: "OUT_OF_SERVICE",
+      amenities: ["Whiteboard", "TV"]
     }
   ]);
   const [isAiMode, setIsAiMode] = useState(false);
 
-  const handleSmartSearch = (intent) => {
-    console.log("AI NLP Intent captured:", intent);
-    setIsAiMode(true);
-    // API Call will go here in Phase 6
+  const handleSearch = (query) => {
+    console.log("Searching for:", query);
+    // In Phase 6, this will trigger the precise Axios logic using AI capabilities
+    if (query.length > 0) {
+      setIsAiMode(true);
+    } else {
+      setIsAiMode(false);
+    }
   };
 
   return (
     <div className="catalog-container">
-      <SmartSearchBar onSearch={handleSmartSearch} />
+      <SmartSearchBar onSearch={handleSearch} />
       
-      <div style={{ marginTop: '3rem' }}>
-        <h2 style={{ fontSize: '1.8rem', borderBottom: '2px solid #eaeaea', paddingBottom: '0.5rem' }}>
-          {isAiMode ? "Top Recommended Spaces" : "Campus Facilities Directory"}
-        </h2>
-        
-        <div className="resource-grid">
-          {resources.length === 0 ? (
-            <p style={{ color: '#888', fontStyle: 'italic' }}>Awaiting API connection to load resources...</p>
-          ) : (
-            resources.map((res) => <ResourceCard key={res.id} resource={res} />)
-          )}
-        </div>
+      <div className="resource-grid">
+        {resources.length > 0 ? (
+          resources.map((resource) => (
+            <ResourceCard key={resource.id} resource={resource} />
+          ))
+        ) : (
+          <div className="empty-state">
+            No resources found. Try adjusting your search query.
+          </div>
+        )}
       </div>
     </div>
   );
