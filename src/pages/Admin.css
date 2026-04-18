@@ -1,0 +1,406 @@
+.admin-page { animation: slideInLeft 0.3s ease; }
+
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.admin-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.admin-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+/* ── Booking Row ─────────────────────────────── */
+.admin-booking-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    transition: box-shadow var(--transition-normal);
+}
+
+.abr-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.abr-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.abr-resource {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+.abr-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.abr-purpose {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.abr-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-sm);
+}
+
+.abr-actions {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.abr-note-row {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border-color);
+    animation: fadeIn 0.2s ease;
+}
+.abr-note-row .form-control { flex: 1; }
+
+/* ── Ticket Row ──────────────────────────────── */
+.admin-ticket-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.atr-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.atr-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.atr-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.atr-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.atr-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-sm);
+}
+
+.atr-actions {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.admin-select {
+    width: auto;
+    padding: 7px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.atr-assign-row {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border-color);
+    animation: fadeIn 0.2s ease;
+}
+.atr-assign-row .form-control { flex: 1; }
+
+/* ── Action Buttons ──────────────────────────── */
+.btn-approve {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--accent-green-light);
+    color: var(--accent-green);
+    border: 1.5px solid transparent;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+}
+.btn-approve:hover { background: var(--accent-green); color: white; }
+.btn-approve:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-reject {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--accent-red-light);
+    color: var(--accent-red);
+    border: 1.5px solid transparent;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+}
+.btn-reject:hover { background: var(--accent-red); color: white; }
+.btn-reject:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-assign {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--accent-purple-light);
+    color: var(--accent-purple);
+    border: 1.5px solid transparent;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+}
+.btn-assign:hover { background: var(--accent-purple); color: white; }
+.btn-assign:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Admin Ticket Comments Panel ────────────── */
+.atr-comments {
+    border-top: 1px solid var(--border-color);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    background: var(--bg-secondary);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    animation: fadeIn 0.2s ease;
+}
+
+.atr-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.atr-reply-row {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+    margin-top: var(--space-xs);
+}
+
+.atr-reply-row .form-control {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+
+/* ── Resource Admin Grid ─────────────────────── */
+.resource-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-md);
+}
+
+.resource-admin-card {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: box-shadow var(--transition-normal), transform var(--transition-fast);
+}
+.resource-admin-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.rac-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.rac-image-placeholder {
+    width: 100%;
+    height: 150px;
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+}
+
+.rac-body {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.rac-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.rac-name {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.rac-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.rac-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+.icon-btn.danger { color: var(--accent-red); }
+.icon-btn.danger:hover { background: var(--accent-red-light); }
+
+.rac-confirm-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    color: white;
+    font-size: 14px;
+    padding: var(--space-md);
+    text-align: center;
+    animation: fadeIn 0.15s ease;
+}
+
+/* ── Ticket Attachment Thumbnails (Admin) ─────── */
+.ticket-attachments {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 6px 0 2px;
+}
+
+.ticket-att-thumb {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1.5px solid var(--border-color);
+    padding: 0;
+    cursor: pointer;
+    background: none;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+.ticket-att-thumb:hover {
+    transform: scale(1.06);
+    border-color: var(--accent-blue);
+}
+.ticket-att-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Lightbox (shared) ────────────────────────── */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+    cursor: zoom-out;
+}
+
+.lightbox-img {
+    max-width: 90vw;
+    max-height: 88vh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    cursor: default;
+    animation: scaleIn 0.2s ease;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    z-index: 1001;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.25); }
