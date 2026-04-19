@@ -35,3 +35,8 @@ export const cancelBooking = async (id) => {
 export const deleteBooking = async (id) => {
     await api.delete(`/api/bookings/${id}`);
 };
+
+export const checkInByQr = async (resourceId, qrSecret) => {
+    const response = await api.post(`/api/checkin/room/${resourceId}`, { qrSecret });
+    return response.data;
+};
