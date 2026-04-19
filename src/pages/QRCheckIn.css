@@ -1,0 +1,187 @@
+.qr-checkin-page {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: var(--space-lg) 0;
+}
+
+.qr-checkin-card {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Idle ─────────────────────────────────────── */
+.qr-idle-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    text-align: center;
+}
+
+.qr-icon-wrap {
+    width: 96px;
+    height: 96px;
+    border-radius: var(--radius-lg);
+    background: var(--accent-blue-light);
+    color: var(--accent-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-idle-state h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.qr-idle-state p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.93rem;
+    max-width: 320px;
+}
+
+.qr-start-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+    padding: 10px 24px;
+    font-size: 0.95rem;
+}
+
+/* ── Scanner ──────────────────────────────────── */
+.qr-scanner-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    position: relative;
+}
+
+.qr-reader-el {
+    width: 100%;
+    max-width: 360px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+/* Override html5-qrcode default styles */
+.qr-reader-el > div {
+    border-radius: var(--radius-md);
+}
+
+.qr-reader-el video {
+    border-radius: var(--radius-md);
+}
+
+.qr-loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: 0.93rem;
+    color: var(--text-secondary);
+}
+
+.qr-cancel-btn {
+    margin-top: var(--space-xs);
+}
+
+/* ── Result ───────────────────────────────────── */
+.qr-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    text-align: center;
+    width: 100%;
+}
+
+.qr-result-icon {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-result--success .qr-result-icon { background: var(--accent-green-light); color: var(--accent-green); }
+.qr-result--info    .qr-result-icon { background: var(--accent-blue-light);  color: var(--accent-blue); }
+.qr-result--warning .qr-result-icon { background: rgba(232, 131, 44, 0.14);  color: var(--accent-orange); }
+.qr-result--error   .qr-result-icon { background: var(--accent-red-light);   color: var(--accent-red); }
+
+.qr-result h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.qr-result--success h2 { color: var(--accent-green); }
+.qr-result--info    h2 { color: var(--accent-blue); }
+.qr-result--warning h2 { color: var(--accent-orange); }
+.qr-result--error   h2 { color: var(--accent-red); }
+
+.qr-result-message {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.93rem;
+    max-width: 340px;
+}
+
+.qr-result-details {
+    width: 100%;
+    max-width: 340px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    background: var(--bg-secondary);
+    text-align: left;
+}
+
+.qr-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+}
+
+.qr-detail-label {
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.qr-detail-value {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* ── Spinner reuse (from global) ──────────────── */
+.spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent-blue);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
