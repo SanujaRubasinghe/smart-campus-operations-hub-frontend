@@ -1,0 +1,195 @@
+/* ── Panel ─────────────────────────────────────── */
+.rfm-panel {
+    width: min(820px, 96vw);
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    background: var(--bg-primary);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+}
+
+.rfm-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ── Body layout ───────────────────────────────── */
+.rfm-body {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 0;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.rfm-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    border-right: 1px solid var(--border-color);
+}
+
+.rfm-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+/* ── Amenity tags ──────────────────────────────── */
+.rfm-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+    min-height: 28px;
+}
+
+.chip-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    font-size: 14px;
+    padding: 0 2px;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+}
+.chip-remove:hover { opacity: 1; }
+
+.rfm-tag-input {
+    display: flex;
+    gap: var(--space-sm);
+}
+.rfm-tag-input .form-control { flex: 1; }
+
+/* ── Image column ──────────────────────────────── */
+.rfm-image-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    background: var(--bg-secondary);
+}
+
+.rfm-image-col > label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 2px;
+}
+
+.rfm-dropzone {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-primary);
+    transition: border-color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+.rfm-dropzone:hover {
+    border-color: var(--accent-blue);
+    background: rgba(0, 102, 204, 0.03);
+    transform: scale(1.01);
+}
+.rfm-dropzone-has-image {
+    border-style: solid;
+    border-color: var(--accent-blue);
+}
+
+.rfm-dropzone-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-tertiary);
+    text-align: center;
+    font-size: 13px;
+    padding: var(--space-md);
+    pointer-events: none;
+}
+.rfm-dropzone-placeholder svg { opacity: 0.45; }
+.rfm-dropzone-placeholder small {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: -4px;
+}
+
+.rfm-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: calc(var(--radius-md) - 2px);
+}
+
+.rfm-upload-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.rfm-upload-hint {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-align: center;
+    line-height: 1.5;
+}
+
+.rfm-clear-img {
+    background: none;
+    border: none;
+    color: var(--accent-red);
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    padding: 0;
+    font-family: inherit;
+    font-weight: 500;
+    text-decoration: underline;
+    transition: opacity var(--transition-fast);
+}
+.rfm-clear-img:hover { opacity: 0.7; }
+
+/* ── Footer ────────────────────────────────────── */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+/* ── Spinner animation ─────────────────────────── */
+.spin { animation: spin-anim 0.9s linear infinite; }
+@keyframes spin-anim {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ── Responsive ────────────────────────────────── */
+@media (max-width: 640px) {
+    .rfm-body  { grid-template-columns: 1fr; }
+    .rfm-row   { grid-template-columns: 1fr; }
+    .rfm-fields { border-right: none; border-bottom: 1px solid var(--border-color); }
+}
