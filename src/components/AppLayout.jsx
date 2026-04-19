@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Home, Layers, Calendar, AlertTriangle, LogOut, User, Shield } from 'lucide-react';
+import { Home, Layers, Calendar, AlertTriangle, LogOut, User, Shield, QrCode } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import NotificationPanel from './NotificationPanel';
 import './AppLayout.css';
@@ -33,6 +33,9 @@ const AppLayout = () => {
                     </NavLink>
                     <NavLink to="/tickets"    id="nav-tickets"    className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>
                         <AlertTriangle size={18} /> Tickets
+                    </NavLink>
+                    <NavLink to="/checkin"   id="nav-checkin"   className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>
+                        <QrCode size={18} /> QR Check-in
                     </NavLink>
                     {user?.role === 'ADMIN' && (
                         <NavLink to="/admin" id="nav-admin" className={({isActive}) => isActive ? 'nav-link active nav-link-admin' : 'nav-link nav-link-admin'}>

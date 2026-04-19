@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Clock, Users, FileText } from 'lucide-react';
+import { X, Calendar, Clock, Users, FileText, AlertTriangle } from 'lucide-react';
 import { createBooking } from '../services/bookingService';
 import { useAuth } from '../contexts/AuthContext';
+import ConflictAlternativesPanel from './ConflictAlternativesPanel';
 
 const BookingModal = ({ resource, onClose, onSuccess }) => {
     const { user } = useAuth();
@@ -14,6 +15,7 @@ const BookingModal = ({ resource, onClose, onSuccess }) => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [conflictData, setConflictData] = useState(null); // { message, alternatives }
 
     // Prevent body scroll
     useEffect(() => {
@@ -52,25 +54,55 @@ const BookingModal = ({ resource, onClose, onSuccess }) => {
             }, user?.id || 1);
             onSuccess?.();
         } catch (err) {
-            const msg = err?.response?.data?.message || err?.response?.data || 'Booking failed. Please try again.';
-            setError(typeof msg === 'string' ? msg : 'Booking failed. Please try again.');
+            if (err?.response?.status === 409) {
+                const data = err.response.data;
+                setConflictData({
+                    message: data.message || 'This time slot is already booked.',
+                    alternatives: Array.isArray(data.alternatives) ? data.alternatives : [],
+                });
+            } else {
+                const msg = err?.response?.data?.message || err?.response?.data || 'Booking failed. Please try again.';
+                setError(typeof msg === 'string' ? msg : 'Booking failed. Please try again.');
+            }
         } finally {
             setLoading(false);
         }
     };
 
+    const showConflict = conflictData !== null;
+
     return (
         <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-            <div className="modal-box" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title">
+            <div
+                className="modal-box"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="booking-modal-title"
+                style={showConflict ? { maxWidth: 540 } : undefined}
+            >
                 <div className="modal-header">
                     <div>
-                        <h2 id="booking-modal-title">Book Resource</h2>
+                        <h2 id="booking-modal-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            {showConflict && <AlertTriangle size={16} style={{ color: 'var(--accent-red)', flexShrink: 0 }} />}
+                            {showConflict ? 'Booking Conflict' : 'Book Resource'}
+                        </h2>
                         <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                             {resource.name} &bull; Capacity: {resource.capacity}
                         </p>
                     </div>
                     <button className="icon-btn" onClick={onClose} aria-label="Close"><X size={20} /></button>
                 </div>
+
+                {showConflict ? (
+                    <ConflictAlternativesPanel
+                        message={conflictData.message}
+                        alternatives={conflictData.alternatives}
+                        originalForm={form}
+                        userId={user?.id || 1}
+                        onSuccess={onSuccess}
+                        onBack={() => setConflictData(null)}
+                    />
+                ) : (
 
                 <form className="modal-form" onSubmit={handleSubmit} id="booking-form">
                     <div className="form-group">
@@ -184,6 +216,7 @@ const BookingModal = ({ resource, onClose, onSuccess }) => {
                         </button>
                     </div>
                 </form>
+                )}
             </div>
         </div>
     );
