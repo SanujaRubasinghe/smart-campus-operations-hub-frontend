@@ -2,10 +2,6 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-/**
- * Wraps a route so only users with role ADMIN can access it.
- * Non-admin authenticated users are redirected to /dashboard.
- */
 const AdminRoute = ({ children }) => {
     const { user, loading } = useAuth();
 

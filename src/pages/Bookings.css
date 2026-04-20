@@ -1,0 +1,66 @@
+.bookings-page { animation: slideInLeft 0.3s ease; }
+
+.bookings-table-wrap {
+    overflow-x: auto;
+    padding: 0;
+}
+
+.bookings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.bookings-table th {
+    text-align: left;
+    padding: 14px 18px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+    background: var(--bg-secondary);
+}
+
+.bookings-table th:first-child { border-radius: var(--radius-md) 0 0 0; }
+.bookings-table th:last-child  { border-radius: 0 var(--radius-md) 0 0; }
+
+.bookings-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.bookings-table tr:last-child td { border-bottom: none; }
+
+.bookings-table tr:hover td { background: var(--bg-secondary); }
+
+.date-cell {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.purpose-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.admin-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--accent-orange);
+    margin-left: 8px;
+    cursor: help;
+}
