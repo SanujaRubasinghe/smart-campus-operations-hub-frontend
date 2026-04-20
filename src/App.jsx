@@ -6,12 +6,14 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
 import Bookings from './pages/Bookings';
+import Tickets from './pages/Tickets';
 
 
 function App() {
     return (
         <Routes>
             <Route path="/bookings" element={<Bookings />} />
+            <Route path="/tickets" element={<Tickets />} />
         </Routes>
     );
 }
