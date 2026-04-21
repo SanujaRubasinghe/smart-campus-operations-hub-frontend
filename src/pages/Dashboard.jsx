@@ -14,7 +14,7 @@ import './Dashboard.css';
 const StatCard = ({ icon: Icon, label, value, color, trend, to }) => (
     <Link to={to} className="stat-card card" id={`stat-card-${label.toLowerCase().replace(/\s+/g,'-')}`}>
         <div className="stat-icon" style={{ background: color + '18', color }}>
-            <Icon size={22} />
+            <Icon size={28} />
         </div>
         <div className="stat-info">
             <span className="stat-label">{label}</span>

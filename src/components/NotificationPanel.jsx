@@ -103,7 +103,7 @@ const NotificationPanel = () => {
             </button>
 
             {open && (
-                <div className="notif-panel glass-panel">
+                <div className="notif-panel">
                     <div className="notif-panel-header">
                         <h3>Notifications</h3>
                         <button className="icon-btn" onClick={() => setOpen(false)}><X size={18} /></button>
