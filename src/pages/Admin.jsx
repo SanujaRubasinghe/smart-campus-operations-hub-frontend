@@ -15,7 +15,7 @@ import { addComment } from '../services/ticketService';
 import ResourceFormModal from '../components/ResourceFormModal';
 import './Admin.css';
 
-const TICKET_STATUSES = ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+const TICKET_STATUSES = ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED', 'REJECTED'];
 
 const Toast = ({ msg, type, onDone }) => {
     useEffect(() => { const t = setTimeout(onDone, 3000); return () => clearTimeout(t); }, [onDone]);

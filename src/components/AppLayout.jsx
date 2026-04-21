@@ -17,7 +17,7 @@ const AppLayout = () => {
         <div className="layout-container">
             <nav className="glass-panel sidebar">
                 <div className="sidebar-header">
-                    <h2>Campus<span style={{ color: 'var(--accent-blue)' }}>Hub</span></h2>
+                    <h2>Campus<span style={{ color: '#60a5fa' }}>Hub</span></h2>
                     <p className="sidebar-subtitle">Operations Platform</p>
                 </div>
 
