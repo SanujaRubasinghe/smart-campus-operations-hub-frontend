@@ -67,6 +67,33 @@
     justify-content: center;
     transition: background var(--transition-fast);
 }
+.attachment-add-more:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    .tickets-grid {
+        grid-template-columns: 1fr;
+    }
+    .comment-input-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+    .form-actions .btn-primary,
+    .form-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* spin animation for Loader icon */
+.spin { animation: spin-anim 0.9s linear infinite; }
+@keyframes spin-anim { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 .pdf-close-btn:hover {
     background: rgba(0, 0, 0, 0.06);

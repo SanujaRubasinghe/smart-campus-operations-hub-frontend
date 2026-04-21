@@ -1,24 +1,49 @@
-import React from 'react';
-import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Home, Layers, Calendar, AlertTriangle, LogOut, User, Shield, QrCode } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
+import { Home, Layers, Calendar, AlertTriangle, LogOut, User, Shield, QrCode, Menu, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import NotificationPanel from './NotificationPanel';
 import './AppLayout.css';
 
 const AppLayout = () => {
     const { user, logout } = useAuth();
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const location = useLocation();
+
+    // Close sidebar on route change (mobile nav)
+    useEffect(() => {
+        setSidebarOpen(false);
+    }, [location.pathname]);
+
+    // Prevent body scroll when sidebar is open on mobile
+    useEffect(() => {
+        document.body.style.overflow = sidebarOpen ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [sidebarOpen]);
 
     const getInitials = (name) => {
         if (!name) return 'U';
         return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
     };
 
+    const isAdminRoute = location.pathname.startsWith('/admin');
+
     return (
-        <div className="layout-container">
-            <nav className="glass-panel sidebar">
+        <div className={`layout-container${sidebarOpen ? ' sidebar-is-open' : ''}${isAdminRoute ? ' admin-theme' : ''}`}>
+            {/* Mobile backdrop */}
+            {sidebarOpen && (
+                <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
+            )}
+
+            <nav className={`sidebar${sidebarOpen ? ' open' : ''}`}>
                 <div className="sidebar-header">
-                    <h2>Campus<span style={{ color: 'var(--accent-blue)' }}>Hub</span></h2>
-                    <p className="sidebar-subtitle">Operations Platform</p>
+                    <div>
+                        <h2>Campus<span style={{ color: '#60a5fa' }}>Hub</span></h2>
+                        <p className="sidebar-subtitle">Operations Platform</p>
+                    </div>
+                    <button className="sidebar-close-btn" onClick={() => setSidebarOpen(false)} aria-label="Close menu">
+                        <X size={20} />
+                    </button>
                 </div>
 
                 <div className="sidebar-links">
@@ -65,9 +90,14 @@ const AppLayout = () => {
 
             <main className="main-content">
                 <header className="topbar">
-                    <div className="topbar-title">
-                        {/* Breadcrumb area — future enhancement */}
-                    </div>
+                    <button
+                        className="hamburger-btn"
+                        onClick={() => setSidebarOpen(o => !o)}
+                        aria-label="Toggle menu"
+                    >
+                        <Menu size={22} />
+                    </button>
+                    <div className="topbar-title" />
                     <div className="topbar-actions">
                         <NotificationPanel />
                         <Link to="/profile" id="topbar-profile-link" className="user-avatar" title="Profile">

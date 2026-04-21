@@ -1,0 +1,128 @@
+.profile-page { animation: slideInLeft 0.3s ease; }
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-lg);
+    align-items: start;
+}
+
+@media (max-width: 700px) {
+    .profile-layout { grid-template-columns: 1fr; }
+}
+
+.profile-avatar-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    text-align: center;
+}
+
+.profile-avatar-large {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 800;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 102, 204, 0.3);
+}
+
+.profile-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+.profile-email {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.profile-actions {
+    width: 100%;
+    margin-top: var(--space-sm);
+}
+
+/* Info Card */
+.profile-info-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.profile-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.profile-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.profile-info-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+}
+.profile-info-row:hover { background: var(--bg-secondary); }
+
+.profile-info-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.profile-info-row > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.profile-info-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.profile-info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.profile-divider {
+    height: 1px;
+    background: var(--border-color);
+}
+
+.profile-quick-actions {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}

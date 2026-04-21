@@ -16,7 +16,7 @@ import './Tickets.css';
 
 const CATEGORIES = ['ELECTRICAL', 'NETWORK', 'PROJECTOR', 'LAB_EQUIPMENT', 'FURNITURE', 'OTHER'];
 const PRIORITIES  = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
-const STATUSES    = ['ALL', 'OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+const STATUSES    = ['ALL', 'OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED', 'REJECTED'];
 
 const Toast = ({ msg, type, onDone }) => {
     useEffect(() => { const t = setTimeout(onDone, 3000); return () => clearTimeout(t); }, [onDone]);
