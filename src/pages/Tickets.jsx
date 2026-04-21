@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
     Plus, X, Paperclip, MessageCircle, Send,
-    RefreshCw, CheckCircle, Loader
+    RefreshCw, CheckCircle, Loader, FileText, Download
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { getAllTickets, createTicket, addComment } from '../services/ticketService';
+import {
+    getAllTickets,
+    createTicket,
+    addComment,
+    downloadTicketPdf,
+    previewTicketPdf
+} from '../services/ticketService';
 import { uploadTicketAttachments } from '../services/supabaseStorage';
 import './Tickets.css';
 
@@ -33,7 +39,11 @@ const Tickets = () => {
     const [tab, setTab]           = useState('ALL');
     const [expandedId, setExpId]  = useState(null);
     const [toast, setToast]       = useState(null);
-    const [lightboxUrl, setLightboxUrl] = useState(null); // image lightbox
+    const [lightboxUrl, setLightboxUrl] = useState(null);
+
+    // PDF states
+    const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
+    const [pdfLoadingId, setPdfLoadingId] = useState(null);
 
     const [form, setForm] = useState({
         category: 'ELECTRICAL',
@@ -48,6 +58,11 @@ const Tickets = () => {
 
     const [commentText, setCommentText]   = useState({});
     const [sendingComment, setSendingComment] = useState(null);
+
+    const isAdmin =
+        user?.role === 'ADMIN' ||
+        user?.roles?.includes?.('ADMIN') ||
+        user?.authorities?.includes?.('ROLE_ADMIN');
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -64,7 +79,6 @@ const Tickets = () => {
         tab === 'ALL' || t.status === tab
     );
 
-    // ── Create Ticket ────────────────────────────────
     const handleFormChange = (e) => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
         setFormError('');
@@ -77,7 +91,7 @@ const Tickets = () => {
         if (images.length === 0) return;
         setFiles(prev => {
             const combined = [...prev, ...images];
-            return combined.slice(0, 3); // max 3
+            return combined.slice(0, 3);
         });
     };
 
@@ -91,7 +105,6 @@ const Tickets = () => {
         }
         setSubmitting(true);
         try {
-            // Upload attachments to Supabase first
             let attachmentUrls = [];
             if (files.length > 0) {
                 attachmentUrls = await uploadTicketAttachments(files);
@@ -108,7 +121,6 @@ const Tickets = () => {
         } finally { setSubmitting(false); }
     };
 
-    // ── Comments ─────────────────────────────────────
     const handleAddComment = async (ticketId) => {
         const text = commentText[ticketId]?.trim();
         if (!text) return;
@@ -121,6 +133,37 @@ const Tickets = () => {
         } catch (_) {
             setToast({ msg: 'Failed to add comment.', type: 'error' });
         } finally { setSendingComment(null); }
+    };
+
+    const handlePreviewPdf = async (ticketId) => {
+        try {
+            setPdfLoadingId(ticketId);
+            const pdfUrl = await previewTicketPdf(ticketId);
+            setPdfPreviewUrl(pdfUrl);
+        } catch (err) {
+            setToast({ msg: 'Failed to open PDF preview.', type: 'error' });
+        } finally {
+            setPdfLoadingId(null);
+        }
+    };
+
+    const handleDownloadPdf = async (ticketId) => {
+        try {
+            setPdfLoadingId(ticketId);
+            await downloadTicketPdf(ticketId);
+            setToast({ msg: 'PDF download started.', type: 'success' });
+        } catch (err) {
+            setToast({ msg: 'Failed to download PDF.', type: 'error' });
+        } finally {
+            setPdfLoadingId(null);
+        }
+    };
+
+    const closePdfModal = () => {
+        if (pdfPreviewUrl) {
+            URL.revokeObjectURL(pdfPreviewUrl);
+        }
+        setPdfPreviewUrl(null);
     };
 
     const statusKey = (s) => (s || '').toLowerCase().replace(/_/g, '_');
@@ -148,7 +191,6 @@ const Tickets = () => {
                 </div>
             </div>
 
-            {/* ── Create Form ── */}
             {view === 'create' && (
                 <div className="card new-ticket-form" id="new-ticket-form">
                     <h2>New Incident Report</h2>
@@ -226,7 +268,7 @@ const Tickets = () => {
                                 {files.length === 0 ? (
                                     <>
                                         <Paperclip size={22} color="var(--text-secondary)" />
-                                        <p>Click or drag &amp; drop images here</p>
+                                        <p>Click or drag & drop images here</p>
                                         <span>PNG, JPG up to 5MB each</span>
                                     </>
                                 ) : (
@@ -285,7 +327,6 @@ const Tickets = () => {
                 </div>
             )}
 
-            {/* ── List View ── */}
             {view === 'list' && (
                 <>
                     <div className="tab-bar">
@@ -319,13 +360,13 @@ const Tickets = () => {
                                             {(ticket.status || '').replace(/_/g, ' ')}
                                         </span>
                                     </div>
+
                                     <h3 className="ticket-title">{(ticket.category || '').replace(/_/g, ' ')}</h3>
                                     <p className="ticket-location">{ticket.location}</p>
                                     {ticket.description && (
                                         <p className="ticket-desc">{ticket.description}</p>
                                     )}
 
-                                    {/* Attachment thumbnails */}
                                     {ticket.attachments && ticket.attachments.length > 0 && (
                                         <div className="ticket-attachments">
                                             {ticket.attachments.map(att => (
@@ -338,6 +379,28 @@ const Tickets = () => {
                                                     <img src={att.filePath} alt={att.fileName} />
                                                 </button>
                                             ))}
+                                        </div>
+                                    )}
+
+                                    {isAdmin && (
+                                        <div className="ticket-pdf-actions">
+                                            <button
+                                                className="btn-secondary pdf-action-btn"
+                                                onClick={() => handlePreviewPdf(ticket.id)}
+                                                disabled={pdfLoadingId === ticket.id}
+                                            >
+                                                <FileText size={14} />
+                                                {pdfLoadingId === ticket.id ? 'Opening...' : 'View PDF'}
+                                            </button>
+
+                                            <button
+                                                className="btn-primary pdf-action-btn"
+                                                onClick={() => handleDownloadPdf(ticket.id)}
+                                                disabled={pdfLoadingId === ticket.id}
+                                            >
+                                                <Download size={14} />
+                                                {pdfLoadingId === ticket.id ? 'Preparing...' : 'Download PDF'}
+                                            </button>
                                         </div>
                                     )}
 
@@ -361,7 +424,6 @@ const Tickets = () => {
                                         </button>
                                     </div>
 
-                                    {/* Comments Panel */}
                                     {expandedId === ticket.id && (
                                         <div className="comments-section">
                                             <div className="comments-list">
@@ -405,7 +467,6 @@ const Tickets = () => {
                 </>
             )}
 
-            {/* ── Lightbox ── */}
             {lightboxUrl && (
                 <div className="lightbox-overlay" onClick={() => setLightboxUrl(null)}>
                     <button className="lightbox-close" onClick={() => setLightboxUrl(null)}>
@@ -417,6 +478,24 @@ const Tickets = () => {
                         className="lightbox-img"
                         onClick={e => e.stopPropagation()}
                     />
+                </div>
+            )}
+
+            {pdfPreviewUrl && (
+                <div className="pdf-modal-overlay" onClick={closePdfModal}>
+                    <div className="pdf-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="pdf-modal-header">
+                            <h3>Ticket PDF Preview</h3>
+                            <button className="pdf-close-btn" onClick={closePdfModal}>
+                                <X size={18} />
+                            </button>
+                        </div>
+                        <iframe
+                            src={pdfPreviewUrl}
+                            title="Ticket PDF Preview"
+                            className="pdf-modal-frame"
+                        />
+                    </div>
                 </div>
             )}
         </div>
