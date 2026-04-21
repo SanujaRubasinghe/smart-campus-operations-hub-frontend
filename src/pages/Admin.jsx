@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-    CheckCircle, XCircle, UserCheck, RefreshCw, Shield,
-    Calendar, AlertTriangle, Send, Plus, Pencil, Trash2, Package, X, MessageCircle
+    CheckCircle, XCircle, UserCheck, RefreshCw, Shield, ShieldCheck,
+    Calendar, AlertTriangle, Send, Plus, Pencil, Trash2, Package, X, MessageCircle,
+    Monitor, Cpu, DoorOpen, Projector, Users, MapPin
 } from 'lucide-react';
 
 
 import {
-    getAllBookingsAdmin, approveBooking, rejectBooking,
     getAllTicketsAdmin, updateTicketStatus, assignTechnician,
     getAllResourcesAdmin, createResource, updateResource, deleteResource,
+    getPendingAdmins, approveAdmin, rejectAdmin
 } from '../services/adminService';
 import { addComment } from '../services/ticketService';
 
@@ -311,6 +312,56 @@ const TicketRow = ({ ticket, onStatusChange, onAssign, onLightbox, onRefresh, lo
     );
 };
 
+// ─── Admin Request Row ───────────────────────────────────────────
+const AdminRequestRow = ({ request, onApprove, onReject, loading }) => {
+    return (
+        <div className="admin-booking-row card" id={`admin-request-${request.id}`}>
+            <div className="abr-main">
+                <div className="abr-info">
+                    <strong className="abr-resource">{request.name}</strong>
+                    <span className="abr-meta">
+                        {request.email} &bull; Joined: {new Date(request.createdAt).toLocaleDateString()}
+                    </span>
+                </div>
+                <div className="abr-right">
+                    <div className="abr-actions">
+                        <button
+                            id={`approve-admin-${request.id}`}
+                            className="btn-approve"
+                            disabled={loading === request.id}
+                            onClick={() => onApprove(request.id)}
+                            title="Approve"
+                        >
+                            <UserCheck size={15} /> Approve
+                        </button>
+                        <button
+                            id={`reject-admin-${request.id}`}
+                            className="btn-reject"
+                            disabled={loading === request.id}
+                            onClick={() => onReject(request.id)}
+                            title="Reject"
+                        >
+                            <XCircle size={15} /> Reject
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+// ─── Resource Icon Helper ─────────────────────────────────────────
+const ResourceIcon = ({ type, size = 32 }) => {
+    switch (type) {
+        case 'LAB':          return <Cpu size={size} />;
+        case 'MEETING_ROOM': return <DoorOpen size={size} />;
+        case 'LECTURE_HALL': return <Monitor size={size} />;
+        case 'EQUIPMENT':    return <Projector size={size} />;
+        default:             return <Package size={size} />;
+    }
+};
+
 
 // ─── Admin Page ──────────────────────────────────────────────────
 const Admin = () => {
@@ -318,9 +369,11 @@ const Admin = () => {
     const [bookings, setBookings]     = useState([]);
     const [tickets, setTickets]       = useState([]);
     const [resources, setResources]   = useState([]);
+    const [pendingAdmins, setPendingAdmins] = useState([]);
     const [loadingB, setLoadingB]     = useState(true);
     const [loadingT, setLoadingT]     = useState(true);
     const [loadingR, setLoadingR]     = useState(false);
+    const [loadingPA, setLoadingPA]   = useState(true);
     const [actionId, setActionId]     = useState(null);
     const [toast, setToast]           = useState(null);
     const [bookingFilter, setBookingFilter] = useState('PENDING');
@@ -355,9 +408,17 @@ const Admin = () => {
         finally { setLoadingR(false); }
     }, []);
 
+    const loadPendingAdmins = useCallback(async () => {
+        setLoadingPA(true);
+        try { setPendingAdmins(await getPendingAdmins()); }
+        catch (_) { setPendingAdmins([]); }
+        finally { setLoadingPA(false); }
+    }, []);
+
     useEffect(() => { loadBookings(); }, [loadBookings]);
     useEffect(() => { loadTickets();  }, [loadTickets]);
     useEffect(() => { loadResources(); }, [loadResources]);
+    useEffect(() => { loadPendingAdmins(); }, [loadPendingAdmins]);
 
     // Booking actions
     const handleApprove = async (id, note) => {
@@ -427,17 +488,43 @@ const Admin = () => {
     const openCreate = () => { setEditingResource(null); setShowResourceModal(true); };
     const openEdit   = (r) => { setEditingResource(r);   setShowResourceModal(true); };
 
+    // Admin request actions
+    const handleApproveAdmin = async (id) => {
+        setActionId(id);
+        try {
+            await approveAdmin(id);
+            setToast({ msg: 'Admin registration approved!', type: 'success' });
+            await loadPendingAdmins();
+        } catch (_) { setToast({ msg: 'Failed to approve admin.', type: 'error' }); }
+        finally { setActionId(null); }
+    };
+
+    const handleRejectAdmin = async (id) => {
+        setActionId(id);
+        try {
+            await rejectAdmin(id);
+            setToast({ msg: 'Admin registration rejected.', type: 'info' });
+            await loadPendingAdmins();
+        } catch (_) { setToast({ msg: 'Failed to reject admin.', type: 'error' }); }
+        finally { setActionId(null); }
+    };
+
     const BOOKING_FILTER_TABS = ['ALL', 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
     const TYPE_LABELS = { LECTURE_HALL: 'Lecture Hall', LAB: 'Lab', MEETING_ROOM: 'Meeting Room', EQUIPMENT: 'Equipment' };
 
     return (
-        <div className="admin-page">
+        <div className="admin-page" id="admin-dashboard">
+            <div className="admin-bg-decoration" aria-hidden="true">
+                <div className="admin-blob admin-blob-1" />
+                <div className="admin-blob admin-blob-2" />
+            </div>
+
             {toast && <Toast msg={toast.msg} type={toast.type} onDone={() => setToast(null)} />}
 
             <div className="page-header">
                 <div>
-                    <h1><Shield size={22} style={{ verticalAlign: 'middle', marginRight: 8 }} />Admin Panel</h1>
-                    <p className="subtitle">Manage bookings, tickets and technician assignments</p>
+                    <h1><span>Administrator</span> Panel</h1>
+                    <p className="subtitle">Campus Operations & Resource Management</p>
                 </div>
             </div>
 
@@ -451,6 +538,10 @@ const Admin = () => {
                 </button>
                 <button id="admin-tab-resources" className={`tab-btn ${tab === 'resources' ? 'active' : ''}`} onClick={() => setTab('resources')}>
                     <Package size={14} /> Resources
+                </button>
+                <button id="admin-tab-requests" className={`tab-btn ${tab === 'requests' ? 'active' : ''}`} onClick={() => setTab('requests')}>
+                    <UserCheck size={14} /> Admin Requests
+                    {pendingAdmins.length > 0 && <span className="badge-count">{pendingAdmins.length}</span>}
                 </button>
             </div>
 
@@ -553,30 +644,51 @@ const Admin = () => {
                     ) : (
                         <div className="resource-admin-grid">
                             {resources.map(r => (
-                                <div key={r.id} className="resource-admin-card card">
-                                    {r.imageUrl ? (
-                                        <img src={r.imageUrl} alt={r.name} className="rac-image" />
-                                    ) : (
-                                        <div className="rac-image-placeholder">
-                                            <Package size={28} />
-                                        </div>
-                                    )}
-                                    <div className="rac-body">
-                                        <div className="rac-header">
-                                            <strong className="rac-name">{r.name}</strong>
-                                            <span className={`status-badge ${(r.status || '').toLowerCase()}`}>{r.status?.replace(/_/g,' ')}</span>
-                                        </div>
-                                        <span className="chip">{TYPE_LABELS[r.type] || r.type}</span>
-                                        {r.location && <span className="rac-meta">📍 {r.location}</span>}
-                                        {r.capacity  && <span className="rac-meta">👥 {r.capacity} seats</span>}
+                                <div key={r.id} id={`admin-resource-${r.id}`} className="resource-admin-card card">
+                                    <div className="rac-header-badges">
+                                        <span className={`status-badge ${(r.status || '').toLowerCase()}`}>
+                                            {r.status === 'ACTIVE' ? <ShieldCheck size={10} /> : <XCircle size={10} />}
+                                            {r.status?.replace(/_/g,' ')}
+                                        </span>
                                     </div>
-                                    <div className="rac-actions">
-                                        <button id={`edit-resource-${r.id}`} className="icon-btn" onClick={() => openEdit(r)} title="Edit">
-                                            <Pencil size={14} />
-                                        </button>
-                                        <button id={`delete-resource-${r.id}`} className="icon-btn danger" onClick={() => setDeleteConfirm(r.id)} title="Delete">
-                                            <Trash2 size={14} />
-                                        </button>
+
+                                    <div className="rac-visual">
+                                        {r.imageUrl ? (
+                                            <img src={r.imageUrl} alt={r.name} className="rac-image" />
+                                        ) : (
+                                            <div className="rac-placeholder">
+                                                <ResourceIcon type={r.type} size={42} />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="rac-body">
+                                        <div className="rac-title-row">
+                                            <strong className="rac-name">{r.name}</strong>
+                                            <span className="type-badge">{TYPE_LABELS[r.type] || r.type}</span>
+                                        </div>
+                                        <div className="rac-location"><MapPin size={12} /> {r.location || 'Unknown'}</div>
+
+                                        <div className="rac-tags">
+                                            {/* Show descriptive tags if available, otherwise defaults */}
+                                            {(r.features || 'Standard').split(',').slice(0, 3).map((f, i) => (
+                                                <span key={i} className="rac-tag">{f.trim()}</span>
+                                            ))}
+                                        </div>
+
+                                        <div className="rac-footer">
+                                            <div className="rac-meta-item">
+                                                <Users size={14} /> <span>{r.capacity || 0}</span>
+                                            </div>
+                                            <div className="rac-actions">
+                                                <button id={`edit-resource-${r.id}`} className="icon-btn" onClick={() => openEdit(r)} title="Edit">
+                                                    <Pencil size={14} />
+                                                </button>
+                                                <button id={`delete-resource-${r.id}`} className="icon-btn danger" onClick={() => setDeleteConfirm(r.id)} title="Delete">
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {deleteConfirm === r.id && (
@@ -589,6 +701,38 @@ const Admin = () => {
                                         </div>
                                     )}
                                 </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* ── ADMIN REQUESTS TAB ── */}
+            {tab === 'requests' && (
+                <div>
+                    <div className="admin-toolbar">
+                        <span className="admin-count">{pendingAdmins.length} pending requests</span>
+                        <button className="icon-btn" onClick={loadPendingAdmins} title="Refresh"><RefreshCw size={14} /></button>
+                    </div>
+
+                    {loadingPA ? (
+                        <div className="spinner-container"><div className="spinner" /></div>
+                    ) : pendingAdmins.length === 0 ? (
+                        <div className="empty-state card">
+                            <UserCheck size={36} />
+                            <h3>No pending requests</h3>
+                            <p>All admin registration requests have been processed.</p>
+                        </div>
+                    ) : (
+                        <div className="admin-list">
+                            {pendingAdmins.map(req => (
+                                <AdminRequestRow
+                                    key={req.id}
+                                    request={req}
+                                    onApprove={handleApproveAdmin}
+                                    onReject={handleRejectAdmin}
+                                    loading={actionId}
+                                />
                             ))}
                         </div>
                     )}

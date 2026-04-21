@@ -26,8 +26,10 @@ const AppLayout = () => {
         return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
     };
 
+    const isAdminRoute = location.pathname.startsWith('/admin');
+
     return (
-        <div className={`layout-container${sidebarOpen ? ' sidebar-is-open' : ''}`}>
+        <div className={`layout-container${sidebarOpen ? ' sidebar-is-open' : ''}${isAdminRoute ? ' admin-theme' : ''}`}>
             {/* Mobile backdrop */}
             {sidebarOpen && (
                 <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />

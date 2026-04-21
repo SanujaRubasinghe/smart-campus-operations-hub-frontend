@@ -66,7 +66,7 @@ const Profile = () => {
                         <InfoRow icon={User}     label="Full Name"     value={user?.name} />
                         <InfoRow icon={Mail}     label="Email"         value={user?.email} />
                         <InfoRow icon={Shield}   label="Role"          value={user?.role} />
-                        <InfoRow icon={Cpu}      label="Auth Provider" value={user?.provider} />
+                        {/*<InfoRow icon={Cpu}      label="Auth Provider" value={user?.provider} />*/}
                         <InfoRow icon={Calendar} label="Member Since"  value={joinedDate} />
                     </div>
 

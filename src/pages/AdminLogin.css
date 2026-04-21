@@ -1,0 +1,308 @@
+/* ── Admin Login Page ──────────────────────────────── */
+.admin-login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d0f14;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-login-card {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 36px 32px;
+    position: relative;
+    z-index: 1;
+    background: rgba(22, 26, 35, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.08);
+    backdrop-filter: blur(16px);
+    animation: adminSlideUp 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@keyframes adminSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Brand */
+.admin-login-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.admin-login-brand-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #c9a227 0%, #f0d060 100%);
+    color: #0d0f14;
+    font-size: 30px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 28px rgba(201, 162, 39, 0.45);
+    margin-bottom: 4px;
+}
+
+.admin-login-brand-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+.admin-login-brand h1 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #f5f0e0;
+}
+
+.admin-login-brand h1 span {
+    color: #d4af37;
+}
+
+.admin-login-brand p {
+    font-size: 11px;
+    color: #8a7a5a;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    color: #d4af37;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-top: 4px;
+}
+
+.admin-badge svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Divider */
+.admin-login-divider {
+    height: 1px;
+    background: rgba(212, 175, 55, 0.12);
+}
+
+/* Body */
+.admin-login-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Tab bar */
+.admin-tab-bar {
+    display: flex;
+    background: rgba(13, 15, 20, 0.6);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.admin-tab {
+    flex: 1;
+    padding: 9px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: #7a6a4a;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.18s;
+}
+
+.admin-tab.active {
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.2);
+}
+
+/* Form */
+.admin-login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.admin-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9a8a6a;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.admin-form-control {
+    width: 100%;
+    padding: 11px 14px;
+    background: rgba(13, 15, 20, 0.7);
+    border: 1.5px solid rgba(212, 175, 55, 0.15);
+    border-radius: 10px;
+    color: #f5f0e0;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.admin-form-control::placeholder { color: #4a4030; }
+
+.admin-form-control:focus {
+    border-color: rgba(212, 175, 55, 0.5);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* Alerts */
+.admin-login-error {
+    background: rgba(220, 38, 38, 0.12);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    color: #f87171;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.admin-login-success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #34d399;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Submit button */
+.admin-submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #c9a227 0%, #e8c84a 100%);
+    color: #0d0f14;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+}
+
+.admin-submit-btn:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(201, 162, 39, 0.4);
+    transform: translateY(-1px);
+}
+
+.admin-submit-btn:active:not(:disabled) { transform: translateY(0); }
+
+.admin-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.admin-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(13, 15, 20, 0.3);
+    border-top-color: #0d0f14;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Footer */
+.admin-login-footer {
+    text-align: center;
+    font-size: 11px;
+    color: #4a4030;
+}
+
+.admin-client-link {
+    display: block;
+    text-align: center;
+    font-size: 13px;
+    color: #7a6a4a;
+    margin-top: 4px;
+    text-decoration: none;
+    transition: color 0.18s;
+}
+
+.admin-client-link:hover { color: #d4af37; text-decoration: underline; }
+
+/* Background blobs */
+.admin-login-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.admin-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.18;
+}
+
+.admin-blob-1 {
+    width: 480px;
+    height: 480px;
+    background: #c9a227;
+    top: -200px;
+    right: -160px;
+    animation: adminBlobFloat 9s ease-in-out infinite;
+}
+
+.admin-blob-2 {
+    width: 360px;
+    height: 360px;
+    background: #7c3aed;
+    bottom: -140px;
+    left: -140px;
+    animation: adminBlobFloat 11s ease-in-out infinite reverse;
+}
+
+@keyframes adminBlobFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%       { transform: translate(18px, -18px) scale(1.06); }
+    66%       { transform: translate(-14px, 14px) scale(0.96); }
+}

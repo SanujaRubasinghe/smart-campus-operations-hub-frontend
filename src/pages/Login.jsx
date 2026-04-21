@@ -172,6 +172,12 @@ const Login = () => {
 
                 <div className="login-footer">
                     <p>Smart Campus Operations Hub &copy; {new Date().getFullYear()}</p>
+                    <a href="/admin/login" style={{ fontSize: 11, color: 'var(--text-tertiary)', textDecoration: 'none', marginTop: 4, display: 'inline-block', transition: 'color 0.18s' }}
+                       onMouseEnter={e => e.target.style.color = 'var(--accent-blue)'}
+                       onMouseLeave={e => e.target.style.color = 'var(--text-tertiary)'}
+                    >
+                        Administrator? Sign in here →
+                    </a>
                 </div>
             </div>
 

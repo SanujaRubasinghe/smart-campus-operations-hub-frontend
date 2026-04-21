@@ -339,3 +339,75 @@
     .content-area { padding: var(--space-sm); }
     .topbar { padding: 0 var(--space-sm); height: 56px; }
 }
+
+/* ── Admin Theme Shell Modifiers ───────────────── */
+.admin-theme {
+    --layout-gold: #d4af37;
+    --layout-gold-light: rgba(212, 175, 55, 0.15);
+    background: #0d0f14;
+}
+
+.admin-theme .sidebar {
+    background: #0d0f14;
+    border-right: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+.admin-theme .sidebar-header h2 span {
+    color: var(--layout-gold) !important;
+}
+
+.admin-theme .nav-link {
+    color: rgba(212, 175, 55, 0.55);
+}
+
+.admin-theme .nav-link:hover {
+    background: rgba(212, 175, 55, 0.08);
+    color: var(--layout-gold);
+}
+
+.admin-theme .nav-link.active {
+    background: var(--layout-gold-light);
+    color: var(--layout-gold);
+    box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.2);
+}
+
+.admin-theme .nav-link.active::before {
+    background: var(--layout-gold);
+}
+
+/* Override per-route colors in admin theme to be unified gold */
+.admin-theme #nav-dashboard:hover svg, .admin-theme #nav-dashboard.active svg,
+.admin-theme #nav-resources:hover svg, .admin-theme #nav-resources.active svg,
+.admin-theme #nav-bookings:hover svg,  .admin-theme #nav-bookings.active svg,
+.admin-theme #nav-tickets:hover svg,   .admin-theme #nav-tickets.active svg,
+.admin-theme #nav-checkin:hover svg,   .admin-theme #nav-checkin.active svg,
+.admin-theme #nav-admin:hover svg,     .admin-theme #nav-admin.active svg {
+    color: var(--layout-gold);
+}
+
+.admin-theme .topbar {
+    background: rgba(22, 26, 35, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.admin-theme .hamburger-btn {
+    color: rgba(212, 175, 55, 0.8);
+}
+
+.admin-theme .hamburger-btn:hover {
+    background: var(--layout-gold-light);
+    color: var(--layout-gold);
+}
+
+.admin-theme .sidebar-avatar {
+    background: linear-gradient(135deg, #c9a227, #f0d060);
+    color: #0d0f14;
+}
+
+.admin-theme .btn-logout:hover {
+    background: rgba(220, 53, 69, 0.12);
+    color: #ef4444;
+}
+

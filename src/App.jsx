@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
 import Login from './pages/Login';
+import AdminLogin from './pages/AdminLogin';
 import OAuthRedirect from './pages/OAuthRedirect';
 import Dashboard from './pages/Dashboard';
 import Resources from './pages/Resources';
@@ -20,6 +21,7 @@ function App() {
         <Routes>
             {/* Public */}
             <Route path="/login" element={<Login />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/oauth2/redirect" element={<OAuthRedirect />} />
 
             {/* Authenticated */}

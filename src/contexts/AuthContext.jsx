@@ -27,9 +27,10 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const logout = () => {
+        const isAdmin = user?.role === 'ADMIN';
         localStorage.removeItem('token');
         setUser(null);
-        window.location.href = '/login';
+        window.location.href = isAdmin ? '/admin/login' : '/login';
     };
 
     return (

@@ -59,3 +59,19 @@ export const updateResource = async (id, resource) => {
 export const deleteResource = async (id) => {
     await api.delete(`/api/v1/resources/${id}`);
 };
+
+// ── Admin Management ─────────────────────────────
+export const getPendingAdmins = async () => {
+    const response = await api.get('/api/admin/users/pending');
+    return Array.isArray(response.data) ? response.data : [];
+};
+
+export const approveAdmin = async (id) => {
+    const response = await api.put(`/api/admin/users/${id}/approve`);
+    return response.data;
+};
+
+export const rejectAdmin = async (id) => {
+    const response = await api.delete(`/api/admin/users/${id}/reject`);
+    return response.data;
+};
