@@ -327,6 +327,39 @@
     animation: fadeIn 0.15s ease;
 }
 
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 600px) {
+    .abr-main,
+    .atr-main {
+        flex-direction: column;
+    }
+    .abr-right,
+    .atr-right {
+        align-items: flex-start;
+        width: 100%;
+    }
+    .abr-actions,
+    .atr-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .admin-select {
+        width: 100%;
+    }
+    .resource-admin-grid {
+        grid-template-columns: 1fr;
+    }
+    .abr-note-row,
+    .atr-assign-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .admin-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
 /* ── Ticket Attachment Thumbnails (Admin) ─────── */
 .ticket-attachments {
     display: flex;

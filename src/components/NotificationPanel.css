@@ -156,6 +156,19 @@
     margin-top: 2px;
 }
 
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 480px) {
+    .notif-panel {
+        position: fixed;
+        top: 56px;
+        right: 0;
+        left: 0;
+        width: 100%;
+        max-height: calc(100vh - 56px);
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+}
+
 /* ── Mark-as-read button ─────────────────────── */
 .notif-read-btn {
     width: 28px;
