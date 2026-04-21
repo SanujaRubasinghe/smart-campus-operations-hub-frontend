@@ -60,10 +60,10 @@ export const deleteTicket = async (id) => {
 //     window.URL.revokeObjectURL(fileURL);
 // };
 
-export const previewTicketPdf = async (id) => {
-    const pdfBlob = await getTicketPdf(id);
-    return window.URL.createObjectURL(pdfBlob);
-};
+// export const previewTicketPdf = async (id) => {
+//     const pdfBlob = await getTicketPdf(id);
+//     return window.URL.createObjectURL(pdfBlob);
+// };
 
 export const getTicketPdf = async (id) => {
     const response = await api.get(`/api/tickets/${id}/pdf`, {
