@@ -60,10 +60,10 @@ export const deleteTicket = async (id) => {
 //     window.URL.revokeObjectURL(fileURL);
 // };
 
-export const previewTicketPdf = async (id) => {
-    const pdfBlob = await getTicketPdf(id);
-    return window.URL.createObjectURL(pdfBlob);
-};
+// export const previewTicketPdf = async (id) => {
+//     const pdfBlob = await getTicketPdf(id);
+//     return window.URL.createObjectURL(pdfBlob);
+// };
 
 export const getTicketPdf = async (id) => {
     const response = await api.get(`/api/tickets/${id}/pdf`, {
@@ -86,7 +86,23 @@ export const downloadTicketPdf = async (id) => {
     window.URL.revokeObjectURL(fileURL);
 };
 
-// export const previewTicketPdf = async (id) => {
-//     const pdfBlob = await getTicketPdf(id);
-//     return window.URL.createObjectURL(pdfBlob);
-// };
+export const previewTicketPdf = async (id) => {
+    const pdfBlob = await getTicketPdf(id);
+    return window.URL.createObjectURL(pdfBlob);
+};
+
+export const downloadAllTicketsPdf = async () => {
+    const response = await api.get('/api/tickets/pdf/all', {
+        responseType: 'blob',
+    });
+
+    const fileURL = window.URL.createObjectURL(response.data);
+    const link = document.createElement('a');
+    link.href = fileURL;
+    link.download = 'all-tickets-report.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(fileURL);
+};

@@ -4,15 +4,23 @@ import {
     RefreshCw, CheckCircle, Loader, FileText, Download
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+// import {
+//     getAllTickets,
+//     createTicket,
+//     addComment,
+//     downloadTicketPdf,
+//     previewTicketPdf
+// } from '../services/ticketService';
+import { uploadTicketAttachments } from '../services/supabaseStorage';
+import './Tickets.css';
 import {
     getAllTickets,
     createTicket,
     addComment,
     downloadTicketPdf,
-    previewTicketPdf
+    previewTicketPdf,
+    downloadAllTicketsPdf
 } from '../services/ticketService';
-import { uploadTicketAttachments } from '../services/supabaseStorage';
-import './Tickets.css';
 
 const CATEGORIES = ['ELECTRICAL', 'NETWORK', 'PROJECTOR', 'LAB_EQUIPMENT', 'FURNITURE', 'OTHER'];
 const PRIORITIES  = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
@@ -147,15 +155,29 @@ const Tickets = () => {
         }
     };
 
-    const handleDownloadPdf = async (ticketId) => {
+    // const handleDownloadPdf = async (ticketId) => {
+    //     try {
+    //         setPdfLoadingId(ticketId);
+    //         await downloadTicketPdf(ticketId);
+    //         setToast({ msg: 'PDF download started.', type: 'success' });
+    //     } catch (err) {
+    //         setToast({ msg: 'Failed to download PDF.', type: 'error' });
+    //     } finally {
+    //         setPdfLoadingId(null);
+    //     }
+    // };
+
+    const [downloadingAllPdf, setDownloadingAllPdf] = useState(false);
+
+    const handleDownloadAllTicketsPdf = async () => {
         try {
-            setPdfLoadingId(ticketId);
-            await downloadTicketPdf(ticketId);
-            setToast({ msg: 'PDF download started.', type: 'success' });
+            setDownloadingAllPdf(true);
+            await downloadAllTicketsPdf();
+            setToast({ msg: 'All tickets PDF download started.', type: 'success' });
         } catch (err) {
-            setToast({ msg: 'Failed to download PDF.', type: 'error' });
+            setToast({ msg: 'Failed to download all tickets PDF.', type: 'error' });
         } finally {
-            setPdfLoadingId(null);
+            setDownloadingAllPdf(false);
         }
     };
 
@@ -187,7 +209,19 @@ const Tickets = () => {
                             <Plus size={15} /> Report Issue
                         </button>
                     )}
-                    <button className="icon-btn" onClick={load} title="Refresh"><RefreshCw size={14}/></button>
+                    <button className="icon-btn" onClick={load} title="Refresh">
+                        <RefreshCw size={14}/>
+                    </button>
+                        {isAdmin && view === 'list' && (
+                            <button
+                                className="btn-primary all-pdf-btn"
+                                onClick={handleDownloadAllTicketsPdf}
+                                disabled={downloadingAllPdf}
+                            >
+                                <Download size={15} />
+                                {downloadingAllPdf ? 'Preparing All PDFs...' : 'Download All Tickets PDF'}
+                            </button>
+                        )}
                 </div>
             </div>
 
@@ -382,7 +416,7 @@ const Tickets = () => {
                                         </div>
                                     )}
 
-                                    {isAdmin && (
+                                    {/* {isAdmin && (
                                         <div className="ticket-pdf-actions">
                                             <button
                                                 className="btn-secondary pdf-action-btn"
@@ -402,7 +436,7 @@ const Tickets = () => {
                                                 {pdfLoadingId === ticket.id ? 'Preparing...' : 'Download PDF'}
                                             </button>
                                         </div>
-                                    )}
+                                    )} */}
 
                                     <div className="ticket-footer">
                                         <span className={`priority-badge ${(ticket.priority || '').toLowerCase()}`}>

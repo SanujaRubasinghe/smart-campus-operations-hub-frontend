@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
     CheckCircle, XCircle, UserCheck, RefreshCw, Shield, ShieldCheck,
     Calendar, AlertTriangle, Send, Plus, Pencil, Trash2, Package, X, MessageCircle,
-    Monitor, Cpu, DoorOpen, Projector, Users, MapPin
+    Monitor, Cpu, DoorOpen, Projector, Users, MapPin, Download
 } from 'lucide-react';
 
 
@@ -11,7 +11,7 @@ import {
     getAllResourcesAdmin, createResource, updateResource, deleteResource,
     getPendingAdmins, approveAdmin, rejectAdmin
 } from '../services/adminService';
-import { addComment } from '../services/ticketService';
+import { addComment, downloadAllTicketsPdf } from '../services/ticketService';
 
 import ResourceFormModal from '../components/ResourceFormModal';
 import './Admin.css';
@@ -28,6 +28,18 @@ const Toast = ({ msg, type, onDone }) => {
         </div>
     );
 };
+
+// const handleDownloadAllTicketsPdf = async () => {
+//     try {
+//         setDownloadingAllPdf(true);
+//         await downloadAllTicketsPdf();
+//         setToast({ msg: 'All tickets PDF download started.', type: 'success' });
+//     } catch (err) {
+//         setToast({ msg: 'Failed to download all tickets PDF.', type: 'error' });
+//     } finally {
+//         setDownloadingAllPdf(false);
+//     }
+// };
 
 // ─── Booking Row ─────────────────────────────────────────────────
 const BookingRow = ({ booking, onApprove, onReject, loading }) => {
@@ -378,11 +390,24 @@ const Admin = () => {
     const [toast, setToast]           = useState(null);
     const [bookingFilter, setBookingFilter] = useState('PENDING');
     const [lightboxUrl, setLightboxUrl]     = useState(null);
+    const [downloadingAllPdf, setDownloadingAllPdf] = useState(false);
 
     // Resource modal state
     const [showResourceModal, setShowResourceModal] = useState(false);
     const [editingResource, setEditingResource]     = useState(null);
     const [deleteConfirm, setDeleteConfirm]         = useState(null); // resource id
+
+    const handleDownloadAllTicketsPdf = async () => {
+        try {
+            setDownloadingAllPdf(true);
+            await downloadAllTicketsPdf();
+            setToast({ msg: 'All tickets PDF download started.', type: 'success' });
+        } catch (err) {
+            setToast({ msg: 'Failed to download all tickets PDF.', type: 'error' });
+        } finally {
+            setDownloadingAllPdf(false);
+        }
+    };
 
     const loadBookings = useCallback(async () => {
         setLoadingB(true);
@@ -595,6 +620,17 @@ const Admin = () => {
                         <span className="admin-count">{tickets.length} tickets total</span>
                         <button className="icon-btn" onClick={loadTickets} title="Refresh"><RefreshCw size={14} /></button>
                     </div>
+
+                    
+                    <button
+                        className="btn-primary all-pdf-btn"
+                        onClick={handleDownloadAllTicketsPdf}
+                        disabled={downloadingAllPdf}
+                    >
+                        <Download size={15} />
+                        {downloadingAllPdf ? 'Preparing All PDFs...' : 'Download All Tickets PDF'}
+                    </button>
+                        
 
                     {loadingT ? (
                         <div className="spinner-container"><div className="spinner" /></div>

@@ -55,6 +55,12 @@
     margin: 0;
 }
 
+.all-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .pdf-close-btn {
     width: 34px;
     height: 34px;
