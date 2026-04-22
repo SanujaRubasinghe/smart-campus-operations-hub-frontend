@@ -1,3 +1,391 @@
+/* ── Page layout ─────────────────────────────── */
+.tickets-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+/* ── Tickets grid ─────────────────────────────── */
+.tickets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-md);
+}
+
+/* ── Ticket card ──────────────────────────────── */
+.ticket-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: var(--space-md);
+}
+
+.ticket-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.ticket-id {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    letter-spacing: 0.3px;
+}
+
+.ticket-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.ticket-location {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.ticket-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ticket-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+/* ── Attachment thumbnails ────────────────────── */
+.ticket-attachments {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ticket-att-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: var(--bg-secondary);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.ticket-att-thumb:hover {
+    opacity: 0.85;
+    transform: scale(1.04);
+}
+
+.ticket-att-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Lightbox ─────────────────────────────────── */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    animation: fadeIn 0.18s ease;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+.lightbox-close:hover { background: rgba(255, 255, 255, 0.22); }
+
+.lightbox-img {
+    max-width: min(90vw, 900px);
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Comments section ─────────────────────────── */
+.comments-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.comment-item {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+}
+
+.comment-author {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-bottom: 3px;
+}
+
+.comment-text {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.no-comments {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: center;
+    margin: 0;
+    padding: 8px 0;
+}
+
+.comment-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.comment-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.comment-item:hover .comment-actions {
+    opacity: 1;
+}
+
+.comment-action-btn {
+    width: 22px;
+    height: 22px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.comment-action-btn:hover {
+    background: var(--bg-primary);
+    color: var(--accent-blue);
+}
+
+.comment-action-btn.comment-delete-btn:hover {
+    color: var(--accent-red);
+}
+
+.comment-action-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.comment-edit-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.comment-edit-textarea {
+    font-size: 13px;
+    resize: none;
+    min-height: 52px;
+}
+
+.comment-edit-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* ── New ticket form ──────────────────────────── */
+.new-ticket-form {
+    max-width: 860px;
+    width: 100%;
+    margin-inline: auto;
+}
+
+.new-ticket-form h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+}
+
+.ticket-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+
+.form-error {
+    font-size: 13px;
+    color: var(--accent-red);
+    background: var(--accent-red-light);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+/* ── File drop zone ───────────────────────────── */
+.file-drop-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13px;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+    min-height: 110px;
+}
+.file-drop-zone:hover { border-color: var(--accent-blue); background: var(--accent-blue-light); }
+.file-drop-zone p { margin: 0; font-weight: 500; }
+.file-drop-zone span { font-size: 11px; color: var(--text-tertiary); }
+
+.attachment-previews {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.attachment-thumb {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.attachment-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.attachment-remove {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    border: none;
+}
+.attachment-remove:hover { background: var(--accent-red); }
+
+.attachment-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 9px;
+    padding: 2px 4px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.attachment-add-more {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-sm);
+    border: 2px dashed var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: var(--text-tertiary);
+    font-size: 10px;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
 /* ── PDF Action Buttons ───────────────────────── */
 .ticket-pdf-actions {
     display: flex;

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
     Plus, X, Paperclip, MessageCircle, Send,
-    RefreshCw, CheckCircle, Loader, FileText, Download
+    RefreshCw, CheckCircle, Loader, FileText, Download,
+    Pencil, Trash2
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 // import {
@@ -17,6 +18,8 @@ import {
     getAllTickets,
     createTicket,
     addComment,
+    updateComment,
+    deleteComment,
     downloadTicketPdf,
     previewTicketPdf,
     downloadAllTicketsPdf
@@ -66,6 +69,9 @@ const Tickets = () => {
 
     const [commentText, setCommentText]   = useState({});
     const [sendingComment, setSendingComment] = useState(null);
+    const [editingComment, setEditingComment] = useState(null); // { id, text, commenterName }
+    const [savingEdit, setSavingEdit]         = useState(false);
+    const [deletingComment, setDeletingComment] = useState(null);
 
     const isAdmin =
         user?.role === 'ADMIN' ||
@@ -129,12 +135,38 @@ const Tickets = () => {
         } finally { setSubmitting(false); }
     };
 
+    const authorName = user?.name || user?.fullName || user?.email || 'User';
+
+    const handleSaveEdit = async () => {
+        if (!editingComment?.text?.trim()) return;
+        setSavingEdit(true);
+        try {
+            await updateComment(editingComment.id, editingComment.text.trim(), editingComment.commenterName, user?.role || 'STUDENT');
+            setEditingComment(null);
+            setToast({ msg: 'Comment updated.', type: 'success' });
+            await load();
+        } catch (_) {
+            setToast({ msg: 'Failed to update comment.', type: 'error' });
+        } finally { setSavingEdit(false); }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        setDeletingComment(commentId);
+        try {
+            await deleteComment(commentId, authorName, user?.role || 'USER');
+            setToast({ msg: 'Comment deleted.', type: 'success' });
+            await load();
+        } catch (_) {
+            setToast({ msg: 'Failed to delete comment.', type: 'error' });
+        } finally { setDeletingComment(null); }
+    };
+
     const handleAddComment = async (ticketId) => {
         const text = commentText[ticketId]?.trim();
         if (!text) return;
         setSendingComment(ticketId);
         try {
-            await addComment(ticketId, text, user?.name || user?.fullName || user?.email || 'User');
+            await addComment(ticketId, text, authorName);
             setCommentText(prev => ({ ...prev, [ticketId]: '' }));
             setToast({ msg: 'Comment added.', type: 'success' });
             await load();
@@ -283,7 +315,7 @@ const Tickets = () => {
                                 name="preferredContact"
                                 type="text"
                                 className="form-control"
-                                placeholder="Phone number or email"
+                                placeholder="Phone number"
                                 value={form.preferredContact}
                                 onChange={handleFormChange}
                                 required
@@ -464,12 +496,65 @@ const Tickets = () => {
                                                 {(!ticket.comments || ticket.comments.length === 0) ? (
                                                     <p className="no-comments">No comments yet.</p>
                                                 ) : (
-                                                    ticket.comments.map(c => (
-                                                        <div className="comment-item" key={c.id}>
-                                                            <div className="comment-author">{c.commenterName || 'User'}</div>
-                                                            <div className="comment-text">{c.commentText}</div>
-                                                        </div>
-                                                    ))
+                                                    ticket.comments.map(c => {
+                                                        const isOwner = c.commenterName === authorName;
+                                                        const isEditing = editingComment?.id === c.id;
+                                                        return (
+                                                            <div className="comment-item" key={c.id}>
+                                                                <div className="comment-item-header">
+                                                                    <div className="comment-author">{c.commenterName || 'User'}</div>
+                                                                    {isOwner && !isEditing && (
+                                                                        <div className="comment-actions">
+                                                                            <button
+                                                                                className="comment-action-btn"
+                                                                                title="Edit comment"
+                                                                                onClick={() => setEditingComment({ id: c.id, text: c.commentText, commenterName: c.commenterName })}
+                                                                            >
+                                                                                <Pencil size={12} />
+                                                                            </button>
+                                                                            <button
+                                                                                className="comment-action-btn comment-delete-btn"
+                                                                                title="Delete comment"
+                                                                                disabled={deletingComment === c.id}
+                                                                                onClick={() => handleDeleteComment(c.id)}
+                                                                            >
+                                                                                <Trash2 size={12} />
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                {isEditing ? (
+                                                                    <div className="comment-edit-row">
+                                                                        <textarea
+                                                                            className="form-control comment-edit-textarea"
+                                                                            value={editingComment.text}
+                                                                            onChange={e => setEditingComment(p => ({ ...p, text: e.target.value }))}
+                                                                            rows={2}
+                                                                        />
+                                                                        <div className="comment-edit-actions">
+                                                                            <button
+                                                                                className="btn-primary"
+                                                                                disabled={savingEdit || !editingComment.text.trim()}
+                                                                                onClick={handleSaveEdit}
+                                                                                style={{ padding: '5px 12px', fontSize: 12 }}
+                                                                            >
+                                                                                {savingEdit ? 'Saving…' : 'Save'}
+                                                                            </button>
+                                                                            <button
+                                                                                className="btn-ghost"
+                                                                                onClick={() => setEditingComment(null)}
+                                                                                style={{ padding: '5px 10px', fontSize: 12 }}
+                                                                            >
+                                                                                Cancel
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="comment-text">{c.commentText}</div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })
                                                 )}
                                             </div>
                                             <div className="comment-input-row">

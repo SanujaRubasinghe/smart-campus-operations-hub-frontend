@@ -11,7 +11,7 @@ import {
     getAllResourcesAdmin, createResource, updateResource, deleteResource,
     getPendingAdmins, approveAdmin, rejectAdmin
 } from '../services/adminService';
-import { addComment, downloadAllTicketsPdf } from '../services/ticketService';
+import { addComment, updateComment, deleteComment, downloadAllTicketsPdf } from '../services/ticketService';
 
 import ResourceFormModal from '../components/ResourceFormModal';
 import './Admin.css';
@@ -121,6 +121,9 @@ const TicketRow = ({ ticket, onStatusChange, onAssign, onLightbox, onRefresh, lo
     const [sending, setSending]       = useState(false);
     const [pendingStatus, setPendingStatus] = useState(null);
     const [statusNotes, setStatusNotes]     = useState('');
+    const [editingComment, setEditingComment] = useState(null); // { id, text, commenterName }
+    const [savingEdit, setSavingEdit]         = useState(false);
+    const [deletingComment, setDeletingComment] = useState(null);
 
     const handleReply = async () => {
         if (!replyText.trim()) return;
@@ -131,6 +134,26 @@ const TicketRow = ({ ticket, onStatusChange, onAssign, onLightbox, onRefresh, lo
             if (onRefresh) onRefresh();
         } catch (_) { /* silently ignore */ }
         finally { setSending(false); }
+    };
+
+    const handleSaveEdit = async () => {
+        if (!editingComment?.text?.trim()) return;
+        setSavingEdit(true);
+        try {
+            await updateComment(editingComment.id, editingComment.text.trim(), editingComment.commenterName, 'ADMIN');
+            setEditingComment(null);
+            if (onRefresh) onRefresh();
+        } catch (_) { /* silently ignore */ }
+        finally { setSavingEdit(false); }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        setDeletingComment(commentId);
+        try {
+            await deleteComment(commentId, 'Admin', 'ADMIN');
+            if (onRefresh) onRefresh();
+        } catch (_) { /* silently ignore */ }
+        finally { setDeletingComment(null); }
     };
 
     const handleStatusSelect = (newStatus) => {
@@ -291,12 +314,67 @@ const TicketRow = ({ ticket, onStatusChange, onAssign, onLightbox, onRefresh, lo
                         {(!ticket.comments || ticket.comments.length === 0) ? (
                             <p className="no-comments">No comments yet.</p>
                         ) : (
-                            ticket.comments.map(c => (
-                                <div className="comment-item" key={c.id}>
-                                    <div className="comment-author">{c.commenterName || 'User'}</div>
-                                    <div className="comment-text">{c.commentText}</div>
-                                </div>
-                            ))
+                            ticket.comments.map(c => {
+                                const isAdminComment = c.commenterName === 'Admin';
+                                const isEditing = editingComment?.id === c.id;
+                                return (
+                                    <div className="comment-item" key={c.id}>
+                                        <div className="comment-item-header">
+                                            <div className="comment-author">{c.commenterName || 'User'}</div>
+                                            <div className="comment-actions">
+                                                {isAdminComment && !isEditing && (
+                                                    <button
+                                                        className="comment-action-btn"
+                                                        title="Edit comment"
+                                                        onClick={() => setEditingComment({ id: c.id, text: c.commentText, commenterName: c.commenterName })}
+                                                    >
+                                                        <Pencil size={12} />
+                                                    </button>
+                                                )}
+                                                {!isEditing && (
+                                                    <button
+                                                        className="comment-action-btn comment-delete-btn"
+                                                        title="Delete comment"
+                                                        disabled={deletingComment === c.id}
+                                                        onClick={() => handleDeleteComment(c.id)}
+                                                    >
+                                                        <Trash2 size={12} />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                        {isEditing ? (
+                                            <div className="comment-edit-row">
+                                                <textarea
+                                                    className="form-control comment-edit-textarea"
+                                                    value={editingComment.text}
+                                                    onChange={e => setEditingComment(p => ({ ...p, text: e.target.value }))}
+                                                    rows={2}
+                                                />
+                                                <div className="comment-edit-actions">
+                                                    <button
+                                                        className="btn-assign"
+                                                        disabled={savingEdit || !editingComment.text.trim()}
+                                                        onClick={handleSaveEdit}
+                                                        style={{ fontSize: 12 }}
+                                                    >
+                                                        {savingEdit ? '…' : 'Save'}
+                                                    </button>
+                                                    <button
+                                                        className="btn-assign"
+                                                        onClick={() => setEditingComment(null)}
+                                                        style={{ fontSize: 12 }}
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="comment-text">{c.commentText}</div>
+                                        )}
+                                    </div>
+                                );
+                            })
                         )}
                     </div>
                     <div className="atr-reply-row">
