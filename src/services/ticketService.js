@@ -86,7 +86,7 @@ export const downloadTicketPdf = async (id) => {
     window.URL.revokeObjectURL(fileURL);
 };
 
-export const previewTicketPdf = async (id) => {
-    const pdfBlob = await getTicketPdf(id);
-    return window.URL.createObjectURL(pdfBlob);
-};
+// export const previewTicketPdf = async (id) => {
+//     const pdfBlob = await getTicketPdf(id);
+//     return window.URL.createObjectURL(pdfBlob);
+// };
